@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Notification generateNotification(RemoteViews remoteViews) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getApplicationContext());
         builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setVisibility(Notification.VISIBILITY_PUBLIC);
         builder.setContent(remoteViews);
         return builder.build();
     }
