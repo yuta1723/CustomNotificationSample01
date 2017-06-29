@@ -6,11 +6,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.session.MediaSession;
+import android.os.Build;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -37,19 +36,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Notification generateNotification(RemoteViews remoteViews) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getApplicationContext());
+        Notification.Builder builder = new Notification.Builder(this.getApplicationContext());
         builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
         Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.bigbuckbunny);
         builder.setLargeIcon(bmp1);
 //        builder.setContent(remoteViews);
 //        builder.setCustomBigContentView(remoteViews);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Log.d(TAG, "this device is over lollipop");
-            MediaSessionCompat mediaSession = new MediaSessionCompat(getApplicationContext(), "naito");
-            builder.setStyle(new NotificationCompat.MediaStyle().setMediaSession(mediaSession.getSessionToken()).setShowCancelButton(true));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            builder.setPriority(Notification.PRIORITY_MAX);
         }
-        builder.setPriority(Notification.PRIORITY_MAX);
 
         Intent pauseIntent = new Intent(this, MainActivity.class);
         pauseIntent.setAction(ACTION_PAUSE);
@@ -66,11 +64,26 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent seekForwardPendingIntent = PendingIntent.getActivity(this, 0, seekForwardIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.button_foward, seekForwardPendingIntent);
 
-        builder.addAction(R.mipmap.ic_launcher, "Previous", seekRewardPendingIntent); // #0
-        builder.addAction(R.mipmap.ic_launcher, "Pause", pausePendingIntent);  // #1
-        builder.addAction(R.mipmap.ic_launcher, "Next", seekForwardPendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            builder.addAction(R.mipmap.ic_launcher, "Previous", seekRewardPendingIntent); // #0
+            builder.addAction(R.mipmap.ic_launcher, "Pause", pausePendingIntent);  // #1
+            builder.addAction(R.mipmap.ic_launcher, "Next", seekForwardPendingIntent);
+        }
 
-        return builder.build();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.d(TAG, "this device is over lollipop");
+            MediaSession mediaSession = new MediaSession(getApplicationContext(), "naito");
+            builder.setStyle(new Notification.MediaStyle()
+                    .setMediaSession(mediaSession.getSessionToken())
+                    .setShowActionsInCompactView(1));
+        }
+        builder.setContentTitle("Wonderful music");
+        builder.setContentText("My Awesome Band");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return builder.build();
+        }
+        return null;
+
     }
 
     private int generateNotificationId() {
