@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 //        builder.setContent(remoteViews);
 //        builder.setCustomBigContentView(remoteViews);
         builder.setStyle(new NotificationCompat.MediaStyle().setMediaSession(null).setShowCancelButton(true));
+        builder.setPriority(Notification.PRIORITY_MAX);
 
         return builder.build();
     }
