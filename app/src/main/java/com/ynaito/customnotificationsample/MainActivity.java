@@ -10,5 +10,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification);
     }
 }
