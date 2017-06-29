@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification);
 //        setActionForRemoteViews(remoteViews);
-
         Notification notification = generateNotification(remoteViews);
         NotificationManagerCompat manager = NotificationManagerCompat.from(this.getApplicationContext());
 
