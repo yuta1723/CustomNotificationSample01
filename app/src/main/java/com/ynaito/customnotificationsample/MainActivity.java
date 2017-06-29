@@ -23,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private String ACTION_SEEK_REWARD = "action_seek_reward";
     private String ACTION_SEEK_FORWARD = "action_seek_forward";
 
+    private String ACTION_DELETE_NOTIFICATION = "action_delete_notification";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
 //            builder.setStyle(new NotificationCompat.MediaStyle().setMediaSession(mediaSession.getSessionToken()).setShowCancelButton(true));
 //        }
         builder.setPriority(Notification.PRIORITY_MAX);
+
+        Intent deleteIntent = new Intent(this, MainActivity.class);
+        deleteIntent.setAction(ACTION_DELETE_NOTIFICATION);
+        PendingIntent deleteNotification = PendingIntent.getActivity(this, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setDeleteIntent(deleteNotification);
 
         return builder.build();
     }
@@ -92,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "seek reward event");
         } else if (intent.getAction().equals(ACTION_SEEK_FORWARD)) {
             Log.d(TAG, "seek forward event");
+        } else if (intent.getAction().equals(ACTION_DELETE_NOTIFICATION)) {
+            Log.d(TAG, "remove notification");
+            finish();
         } else {
             Log.d(TAG, "unknown action ");
         }
