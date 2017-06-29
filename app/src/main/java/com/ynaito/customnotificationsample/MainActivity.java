@@ -3,6 +3,8 @@ package com.ynaito.customnotificationsample;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,9 +39,12 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getApplicationContext());
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-        builder.setContent(remoteViews);
-        builder.setCustomBigContentView(remoteViews);
-        builder.setStyle(new NotificationCompat.MediaStyle().setMediaSession(null));
+        Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.bigbuckbunny);
+        builder.setLargeIcon(bmp1);
+//        builder.setContent(remoteViews);
+//        builder.setCustomBigContentView(remoteViews);
+        builder.setStyle(new NotificationCompat.MediaStyle().setMediaSession(null).setShowCancelButton(true));
+
         return builder.build();
     }
 
